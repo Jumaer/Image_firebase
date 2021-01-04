@@ -53,7 +53,13 @@ private StorageReference firebaseSt;
         firebaseDB = FirebaseDatabase.getInstance().getReference("Uploads");
         firebaseSt = FirebaseStorage.getInstance().getReference("Uploads");
 
-
+         display_recycle.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 startActivity( new Intent(MainActivity.this,AllImagesPage.class));
+                 finish();
+             }
+         });
 
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,8 +70,13 @@ private StorageReference firebaseSt;
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(uploadTask!=null && uploadTask.isInProgress()){
+                    Toast.makeText(getApplicationContext(),"The task is in progress..",Toast.LENGTH_LONG).show();
+                }
+                  else{
+                    saveImageStore();
+                }
 
-              saveImageStore();
             }
         });
       }
@@ -112,7 +123,7 @@ private StorageReference firebaseSt;
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
                         // ...
-                        Toast.makeText(getApplicationContext(),"Failed to resolve..",Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Failed to restore..",Toast.LENGTH_LONG).show();
                     }
                 });
 
