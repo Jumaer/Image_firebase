@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
+import com.onesignal.OneSignal;
 import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,10 +39,21 @@ private Uri imageUri;
 private FirebaseAuth firebaseAuth;
 private DatabaseReference firebaseDB;
 private StorageReference firebaseSt;
+    private static final String ONESIGNAL_APP_ID = "a3f4eaee-16eb-4c7b-b07c-3c1b171e479e";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Enable verbose OneSignal logging to debug issues if needed.
+        OneSignal.setLogLevel(OneSignal.LOG_LEVEL.VERBOSE, OneSignal.LOG_LEVEL.NONE);
+
+        // OneSignal Initialization
+        OneSignal.initWithContext(this);
+        OneSignal.setAppId(ONESIGNAL_APP_ID);
+
+
+
 
         image_view = findViewById(R.id.imageView_display);
         save = findViewById(R.id.button_save);
