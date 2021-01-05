@@ -8,11 +8,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +28,12 @@ public class AllImagesPage extends AppCompatActivity {
   private   ImageAdapterRecycle imageAdapterRecycle;
   private   List<UploadImage> uploadImageList = new ArrayList<>();
   private   DatabaseReference fdb ;
-
+  private FirebaseStorage fB_Storage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_images_page);
-
+        fB_Storage = FirebaseStorage.getInstance();
         recyclerView = findViewById(R.id.recycle_all_images);
         gridLayoutManager = new GridLayoutManager(this,2);
         recyclerView.setHasFixedSize(true);
@@ -41,8 +46,10 @@ public class AllImagesPage extends AppCompatActivity {
         fdb.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                uploadImageList.clear();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()){
                   UploadImage uploadImage = dataSnapshot.getValue(UploadImage.class);
+                  uploadImage.setKey(dataSnapshot.getKey());
                   uploadImageList.add(uploadImage);
                 }
                 imageAdapterRecycle = new ImageAdapterRecycle(getApplicationContext(),uploadImageList);
@@ -66,7 +73,17 @@ public class AllImagesPage extends AppCompatActivity {
 
                     @Override
                     public void onDeleteItem(int position) {
-                        Toast.makeText(getApplicationContext(),"This option will work soon",Toast.LENGTH_SHORT).show();
+
+                        UploadImage selectedImage = uploadImageList.get(position);
+                       final String key = selectedImage.getKey();
+                        StorageReference storageReference = fB_Storage.getReferenceFromUrl(selectedImage.getImageUrl());
+                        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                             fdb.child(key).removeValue();
+                             Toast.makeText(getApplicationContext(),"This image has been deleted",Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                     @Override

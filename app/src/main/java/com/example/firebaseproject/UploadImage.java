@@ -1,7 +1,19 @@
 package com.example.firebaseproject;
 
+import com.google.firebase.database.Exclude;
+import com.google.gson.annotations.Expose;
+
 public class UploadImage {
-    private String imageName, ImageUrl;
+    private String imageName, ImageUrl,key;
+
+   @Exclude
+    public String getKey() {
+        return key;
+    }
+    @Exclude
+    public void setKey(String key) {
+        this.key = key;
+    }
 
     public UploadImage(String imageName, String imageUrl) {
         this.imageName = imageName;
