@@ -22,7 +22,7 @@ public class AllImagesPage extends AppCompatActivity {
   private   GridLayoutManager gridLayoutManager;
   private   ImageAdapterRecycle imageAdapterRecycle;
   private   List<UploadImage> uploadImageList = new ArrayList<>();
-  private DatabaseReference fdb ;
+  private   DatabaseReference fdb ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,32 @@ public class AllImagesPage extends AppCompatActivity {
                 imageAdapterRecycle = new ImageAdapterRecycle(getApplicationContext(),uploadImageList);
                 recyclerView.setLayoutManager(gridLayoutManager);
                 recyclerView.setAdapter(imageAdapterRecycle);
+
+                imageAdapterRecycle.itemRecycleClick(new ImageAdapterRecycle.OnItemRecycleImageListener() {
+                    @Override
+                    public void onItemClickImage(int position) {
+                           String textImage = uploadImageList.get(position).getImageName();
+                           Toast.makeText(getApplicationContext()," Image : " +textImage +"\n"
+                                   +" Entry Serial : " + position,Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onViewImageItem(int position) {
+                        String textImage = uploadImageList.get(position).getImageName();
+                        Toast.makeText(getApplicationContext()," Name : " +textImage +"\n"
+                                +" But this feature is still updating",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onDeleteItem(int position) {
+                        Toast.makeText(getApplicationContext(),"This option will work soon",Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onMarkImportant(int position) {
+                        Toast.makeText(getApplicationContext(),"This option will work soon",Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
